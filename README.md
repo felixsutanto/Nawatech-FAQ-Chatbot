@@ -1,4 +1,4 @@
-# 🤖 Nawatech FAQ Chatbot
+# Nawatech FAQ Chatbot
 
 A sophisticated AI-powered FAQ chatbot built with **Streamlit**, **LangChain**, and **OpenAI GPT** featuring **RAG (Retrieval-Augmented Generation)** for accurate and contextual responses about Nawatech services and products.
 
@@ -412,3 +412,4 @@ For production deployments, consider integrating:
 - **ELK Stack**: Log aggregation and analysis
 
 - **Sentry**: Error tracking and alerting
+
