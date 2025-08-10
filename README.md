@@ -21,8 +21,6 @@ A sophisticated AI-powered FAQ chatbot built with **Streamlit**, **LangChain**, 
 - [📊 Quality Scoring](#-quality-scoring)
 - [🧪 Testing](#-testing)
 - [📈 Monitoring](#-monitoring)
-- [🤝 Contributing](#-contributing)
-- [📝 License](#-license)
 
 ## 🌟 Features
 
@@ -412,4 +410,5 @@ For production deployments, consider integrating:
 - **Prometheus**: Metrics collection
 - **Grafana**: Metrics visualization
 - **ELK Stack**: Log aggregation and analysis
+
 - **Sentry**: Error tracking and alerting
