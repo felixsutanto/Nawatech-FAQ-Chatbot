@@ -1,0 +1,212 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nawatech-config
+  namespace: default
+  labels:
+    app: nawatech-chatbot
+    component: config
+data:
+  # OpenAI Configuration
+  openai-model: "gpt-3.5-turbo"
+  temperature: "0.7"
+  max-tokens: "1000"
+  request-timeout: "30"
+  
+  # RAG Configuration
+  chunk-size: "1000"
+  chunk-overlap: "200"
+  retrieval-k: "4"
+  similarity-threshold: "0.7"
+  
+  # Memory Configuration
+  memory-window: "10"
+  
+  # Security Configuration
+  rate-limit-per-minute: "10"
+  rate-limit-per-hour: "100"
+  max-input-length: "1000"
+  
+  # Application Configuration
+  app-port: "8501"
+  app-host: "0.0.0.0"
+  debug-mode: "false"
+  log-level: "INFO"
+  app-title: "Nawatech FAQ Chatbot"
+  app-icon: "🤖"
+  company-name: "PT. Nawa Darsana Teknologi"
+  
+  # Data Configuration
+  faq-file-path: "data/FAQ_Nawa.xlsx"
+  vector-store-path: "data/vector_store"
+
+---
+# ConfigMap for FAQ data (sample data)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: faq-data-config
+  namespace: default
+  labels:
+    app: nawatech-chatbot
+    component: data
+data:
+  FAQ_Nawa.xlsx: |
+    # This would contain the base64 encoded Excel file
+    # In production, you would encode the actual file:
+    # cat FAQ_Nawa.xlsx | base64 -w 0
+    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
+
+---
+# ConfigMap for application configuration files
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nawatech-app-config
+  namespace: default
+  labels:
+    app: nawatech-chatbot
+    component: app-config
+data:
+  streamlit_config.toml: |
+    [server]
+    port = 8501
+    address = "0.0.0.0"
+    headless = true
+    fileWatcherType = "none"
+    
+    [browser]
+    gatherUsageStats = false
+    
+    [theme]
+    primaryColor = "#FF6B6B"
+    backgroundColor = "#FFFFFF"
+    secondaryBackgroundColor = "#F0F2F6"
+    textColor = "#262730"
+    font = "sans serif"
+    
+  logging.yaml: |
+    version: 1
+    disable_existing_loggers: false
+    formatters:
+      standard:
+        format: '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+      detailed:
+        format: '%(asctime)s [%(levelname)s] %(name)s [%(filename)s:%(lineno)d]: %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        level: INFO
+        formatter: standard
+        stream: ext://sys.stdout
+      file:
+        class: logging.handlers.RotatingFileHandler
+        level: INFO
+        formatter: detailed
+        filename: /app/logs/chatbot.log
+        maxBytes: 10485760  # 10MB
+        backupCount: 5
+    loggers:
+      '':
+        level: INFO
+        handlers: [console, file]
+        propagate: false
+      uvicorn:
+        level: INFO
+        handlers: [console]
+        propagate: false
+      streamlit:
+        level: WARNING
+        handlers: [console]
+        propagate: false
+
+---
+# ConfigMap for nginx configuration (if using nginx sidecar)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: default
+  labels:
+    app: nawatech-chatbot
+    component: nginx
+data:
+  nginx.conf: |
+    user nginx;
+    worker_processes auto;
+    error_log /var/log/nginx/error.log warn;
+    pid /var/run/nginx.pid;
+    
+    events {
+        worker_connections 1024;
+        use epoll;
+        multi_accept on;
+    }
+    
+    http {
+        include /etc/nginx/mime.types;
+        default_type application/octet-stream;
+        
+        log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                       '$status $body_bytes_sent "$http_referer" '
+                       '"$http_user_agent" "$http_x_forwarded_for"';
+        
+        access_log /var/log/nginx/access.log main;
+        
+        sendfile on;
+        tcp_nopush on;
+        tcp_nodelay on;
+        keepalive_timeout 65;
+        types_hash_max_size 2048;
+        
+        # Security headers
+        add_header X-Frame-Options "SAMEORIGIN" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header X-XSS-Protection "1; mode=block" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+        
+        # Rate limiting
+        limit_req_zone $binary_remote_addr zone=chatbot:10m rate=10r/m;
+        
+        upstream streamlit {
+            server 127.0.0.1:8501;
+        }
+        
+        server {
+            listen 80;
+            server_name _;
+            
+            # Rate limiting
+            limit_req zone=chatbot burst=20 nodelay;
+            
+            # Security
+            client_max_body_size 10M;
+            client_body_timeout 60s;
+            client_header_timeout 60s;
+            
+            location / {
+                proxy_pass http://streamlit;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                
+                # WebSocket support
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "upgrade";
+                
+                # Timeouts
+                proxy_connect_timeout 60s;
+                proxy_send_timeout 60s;
+                proxy_read_timeout 60s;
+            }
+            
+            # Health check endpoint
+            location /health {
+                access_log off;
+                return 200 "healthy\n";
+                add_header Content-Type text/plain;
+            }
+        }
+    }

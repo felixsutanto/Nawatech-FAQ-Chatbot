@@ -1,0 +1,185 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nawatech-chatbot
+  namespace: default
+  labels:
+    app: nawatech-chatbot
+    version: v1.0.0
+    component: backend
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: nawatech-chatbot
+  template:
+    metadata:
+      labels:
+        app: nawatech-chatbot
+        version: v1.0.0
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8501"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: nawatech-chatbot-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+      - name: chatbot
+        image: nawatech/faq-chatbot:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8501
+          name: http
+          protocol: TCP
+        env:
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: nawatech-secrets
+              key: openai-api-key
+        - name: OPENAI_MODEL
+          valueFrom:
+            configMapKeyRef:
+              name: nawatech-config
+              key: openai-model
+        - name: TEMPERATURE
+          valueFrom:
+            configMapKeyRef:
+              name: nawatech-config
+              key: temperature
+        - name: MAX_TOKENS
+          valueFrom:
+            configMapKeyRef:
+              name: nawatech-config
+              key: max-tokens
+        - name: CHUNK_SIZE
+          valueFrom:
+            configMapKeyRef:
+              name: nawatech-config
+              key: chunk-size
+        - name: CHUNK_OVERLAP
+          valueFrom:
+            configMapKeyRef:
+              name: nawatech-config
+              key: chunk-overlap
+        - name: RETRIEVAL_K
+          valueFrom:
+            configMapKeyRef:
+              name: nawatech-config
+              key: retrieval-k
+        - name: RATE_LIMIT_PER_MINUTE
+          valueFrom:
+            configMapKeyRef:
+              name: nawatech-config
+              key: rate-limit-per-minute
+        - name: RATE_LIMIT_PER_HOUR
+          valueFrom:
+            configMapKeyRef:
+              name: nawatech-config
+              key: rate-limit-per-hour
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: nawatech-config
+              key: log-level
+        - name: ENVIRONMENT
+          value: "production"
+        - name: DEBUG_MODE
+          value: "false"
+        
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        
+        livenessProbe:
+          httpGet:
+            path: /_stcore/health
+            port: 8501
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        
+        readinessProbe:
+          httpGet:
+            path: /_stcore/health
+            port: 8501
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        
+        volumeMounts:
+        - name: faq-data
+          mountPath: /app/data
+          readOnly: true
+        - name: app-logs
+          mountPath: /app/logs
+        
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+      
+      volumes:
+      - name: faq-data
+        configMap:
+          name: faq-data-config
+      - name: app-logs
+        emptyDir: {}
+      
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - nawatech-chatbot
+              topologyKey: kubernetes.io/hostname
+      
+      tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
+        effect: "NoSchedule"
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: nawatech-chatbot-sa
+  namespace: default
+  labels:
+    app: nawatech-chatbot
+automountServiceAccountToken: false
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: nawatech-chatbot-pdb
+  namespace: default
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: nawatech-chatbot

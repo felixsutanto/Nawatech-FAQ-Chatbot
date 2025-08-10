@@ -1,0 +1,51 @@
+# Core Streamlit and Web Framework
+streamlit
+streamlit-chat
+
+# LangChain and LLM Integration
+langchain
+langchain-community
+langchain-openai
+openai
+
+# Vector Database and Embeddings
+faiss-cpu
+sentence-transformers
+
+# Data Processing and Analysis
+pandas
+numpy
+scikit-learn
+openpyxl
+
+# Text Processing
+nltk
+spacy
+beautifulsoup4
+
+# Security and Validation
+cryptography
+python-jose[cryptography]
+passlib[bcrypt]
+
+# Utilities and Helpers
+python-dotenv
+pydantic
+requests
+retry
+
+# Monitoring and Logging
+loguru
+
+# Development and Testing
+pytest
+pytest-asyncio
+black
+flake8
+
+# Production Dependencies
+gunicorn
+uvicorn[standard]
+
+# Optional: GPU support for FAISS (uncomment if GPU is used)
+# faiss-gpu
