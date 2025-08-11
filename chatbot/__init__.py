@@ -27,6 +27,6 @@ Configuration management for Nawatech FAQ Chatbot
 This package handles all configuration settings and environment management.
 """
 
-from .settings import Settings
+from config.settings import Settings
 
 __all__ = ["Settings"]
