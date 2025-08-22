@@ -92,7 +92,7 @@ graph TB
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/nawatech-faq-chatbot.git
+   git clone https://github.com/felixsutanto/Nawatech-FAQ-Chatbot
    cd nawatech-faq-chatbot
    ```
 
@@ -410,4 +410,5 @@ For production deployments, consider integrating:
 - **Prometheus**: Metrics collection
 - **Grafana**: Metrics visualization
 - **ELK Stack**: Log aggregation and analysis
+
 - **Sentry**: Error tracking and alerting
